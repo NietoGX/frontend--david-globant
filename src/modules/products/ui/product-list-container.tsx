@@ -1,11 +1,23 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ProductGrid } from './product-grid';
 import { SearchBar } from './search-bar';
 import { useProductList } from './hooks/use-product-list';
+import { useIntersectionObserver } from '@/modules/shared/ui/hooks/use-intersection-observer';
 
 export function ProductListContainer() {
-    const { products, isLoading } = useProductList();
+    const { products, isLoading, loadMore, hasMore, totalCount } = useProductList();
+
+    const [loadMoreRef, isIntersecting] = useIntersectionObserver({
+        threshold: 0.5,
+    });
+
+    useEffect(() => {
+        if (isIntersecting && hasMore && !isLoading) {
+            loadMore();
+        }
+    }, [isIntersecting, hasMore, isLoading, loadMore]);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -14,14 +26,21 @@ export function ProductListContainer() {
                     Mobile Shop
                 </h1>
                 <SearchBar
-                    resultCount={products.length}
+                    resultCount={totalCount}
                 />
             </div>
 
-            {isLoading ? (
+            {isLoading && products.length === 0 ? (
                 <div className="flex justify-center py-20">Loading...</div>
             ) : (
-                <ProductGrid products={products} />
+                <>
+                    <ProductGrid products={products} />
+                    {hasMore && (
+                        <div ref={loadMoreRef} className="flex justify-center py-8">
+                            {isLoading && <span>Loading more products...</span>}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

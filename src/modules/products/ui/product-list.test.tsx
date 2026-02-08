@@ -1,13 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ProductListContainer } from './product-list-container';
 import { Product } from '@/modules/products/domain/product';
 import React from 'react';
-
-// Mock child components to isolate ProductListContainer logic (though it's mostly integration)
-// But wait, user asked to test "visualization of products and scanner".
-// So integration test of ProductListContainer -> ProductGrid -> ProductCard and SearchBar is appropriate.
+import * as useIntersectionObserverHook from '@/modules/shared/ui/hooks/use-intersection-observer';
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({
@@ -37,24 +34,35 @@ const mockProducts: Product[] = [
     },
 ];
 
-// Mock the product list hook
-vi.mock('./hooks/use-product-list', () => ({
-    useProductList: () => ({
-        products: mockProducts,
-        isLoading: false,
-    }),
+const mockLoadMore = vi.fn();
+
+// Mock the product list hook with default values
+const mockUseProductList = vi.fn(() => ({
+    products: mockProducts,
+    isLoading: false,
+    loadMore: mockLoadMore,
+    hasMore: true,
+    totalCount: 100, // Total matches
 }));
 
+vi.mock('./hooks/use-product-list', () => ({
+    useProductList: () => mockUseProductList(),
+}));
+
+
 describe('ProductListContainer UI', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     it('should render the visible title', async () => {
         render(<ProductListContainer />);
-        // Wait for loading to finish
         expect(await screen.findByText('Mobile Shop')).toBeInTheDocument();
     });
 
-    it('should result count in SearchBar', async () => {
+    it('should show result count in SearchBar', async () => {
         render(<ProductListContainer />);
-        expect(await screen.findByText('2')).toBeInTheDocument(); // Count
+        expect(await screen.findByText('100')).toBeInTheDocument();
     });
 
     it('should render product cards for each product', async () => {
@@ -67,5 +75,23 @@ describe('ProductListContainer UI', () => {
         render(<ProductListContainer />);
         const input = await screen.findByPlaceholderText('Search for a brand or model...');
         expect(input).toBeInTheDocument();
+    });
+
+    it('should call loadMore when intersecting and hasMore is true', () => {
+        // Mock IntersectionObserver to return [ref, true]
+        vi.spyOn(useIntersectionObserverHook, 'useIntersectionObserver').mockReturnValue([vi.fn(), true]);
+
+        render(<ProductListContainer />);
+
+        expect(mockLoadMore).toHaveBeenCalled();
+    });
+
+    it('should NOT call loadMore when NOT intersecting', () => {
+        // Mock IntersectionObserver to return [ref, false]
+        vi.spyOn(useIntersectionObserverHook, 'useIntersectionObserver').mockReturnValue([vi.fn(), false]);
+
+        render(<ProductListContainer />);
+
+        expect(mockLoadMore).not.toHaveBeenCalled();
     });
 });

@@ -2,6 +2,8 @@
 
 This project is an e-commerce application developed as part of a technical test. It implements a product listing page, product detail page, and shopping cart functionality, following best practices in architecture and design.
 
+🔗 **Live Demo**: [https://frontend-test.nietodev.es/](https://frontend-test.nietodev.es/)
+
 ## 🚀 Getting Started
 
 ### Prerequisites

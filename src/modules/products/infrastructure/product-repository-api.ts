@@ -11,8 +11,8 @@ const ONE_HOUR = 3600;
 
 export class ProductRepositoryApi implements ProductRepository {
     constructor(
-        private readonly httpClient = inject(IID.httpClient),
-        private readonly cacheManager = inject(IID.cacheManager)
+        private readonly httpClient: HttpClient = inject(IID.httpClient),
+        private readonly cacheManager: CacheManager = inject(IID.cacheManager)
     ) { }
 
     async getProducts(): Promise<Product[]> {

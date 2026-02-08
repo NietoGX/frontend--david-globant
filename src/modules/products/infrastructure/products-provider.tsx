@@ -4,8 +4,6 @@ import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { initialize } from '@/modules/shared/infrastructure/bootstrap';
 import { Product, ProductDetail } from '@/modules/products/domain/product';
 
-const { productsFacade } = initialize();
-
 interface ProductsContextType {
     getProductList: (search?: string) => Promise<Product[]>;
     getProductDetail: (id: string) => Promise<ProductDetail>;
@@ -14,10 +12,13 @@ interface ProductsContextType {
 export const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
 export function ProductsProvider({ children }: { children: ReactNode }) {
-    const value = useMemo(() => ({
-        getProductList: async (search?: string) => productsFacade.getProductList(search),
-        getProductDetail: async (id: string) => productsFacade.getProductDetail(id),
-    }), []);
+    const value = useMemo(() => {
+        const { productsFacade } = initialize();
+        return {
+            getProductList: async (search?: string) => productsFacade.getProductList(search),
+            getProductDetail: async (id: string) => productsFacade.getProductDetail(id),
+        };
+    }, []);
 
     return (
         <ProductsContext.Provider value={value}>

@@ -4,7 +4,7 @@ import { createContext, useContext, ReactNode, useEffect, useState, useCallback,
 import { initialize } from '@/modules/shared/infrastructure/bootstrap';
 import { CartItemDto } from '@/modules/cart/infrastructure/cart-dto';
 
-const { cartFacade } = initialize();
+
 
 interface CartContextType {
     cartCount: number;
@@ -25,6 +25,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const addToCart = useCallback(async (item: CartItemDto) => {
+        const { cartFacade } = initialize();
         const count = await cartFacade.addToCart(item);
         setCartCount(count);
         localStorage.setItem('cartCount', count.toString());

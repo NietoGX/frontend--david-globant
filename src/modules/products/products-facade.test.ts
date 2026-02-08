@@ -1,22 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { bootstrap, resetBootstrap } from '@/modules/shared/infrastructure/bootstrap';
+import { initialize, resetInitialize } from '@/modules/shared/infrastructure/bootstrap';
 import { Ioc } from '@/modules/shared/infrastructure/core/Ioc';
+import { ProductsFacade } from './products-facade';
 
 describe('Products Facade', () => {
-    let productsFacade: any;
+    let productsFacade: ProductsFacade;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         Ioc.instance.reset();
-        resetBootstrap();
-        bootstrap();
-        // Re-import to ensure fresh execution if possible, or just import once.
-        // Since it exports a const singleton, dynamic import will return the SAME module instance.
-        // However, if the module failed to evaluate previously, it might re-evaluate?
-        // Or we just rely on `bootstrap` filling the Ioc so when the singleton WAS created (if it was) it worked?
-        // Wait, if it failed previously (in the failed run), the process exited.
-        // In this run, we want to ensure it works.
-        const module = await import('./products-facade');
-        productsFacade = module.productsFacade;
+        resetInitialize();
+        const facades = initialize();
+        productsFacade = facades.productsFacade;
     });
 
     it('should have getProductList defined', () => {

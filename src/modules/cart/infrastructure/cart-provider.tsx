@@ -1,9 +1,10 @@
 'use client';
 
 import { createContext, useContext, ReactNode, useEffect, useState, useCallback, useMemo } from 'react';
-import { cartFacade } from '@/modules/cart/cart-facade';
-import { bootstrap } from '@/modules/shared/infrastructure/bootstrap';
+import { initialize } from '@/modules/shared/infrastructure/bootstrap';
 import { CartItemDto } from '@/modules/cart/infrastructure/cart-dto';
+
+const { cartFacade } = initialize();
 
 interface CartContextType {
     cartCount: number;
@@ -13,21 +14,17 @@ interface CartContextType {
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-    const [isInitialized, setIsInitialized] = useState(false);
-
     const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
-        bootstrap();
         const savedCount = localStorage.getItem('cartCount');
         if (savedCount) {
             setCartCount(parseInt(savedCount, 10));
         }
-        setIsInitialized(true);
     }, []);
 
     const addToCart = useCallback(async (item: CartItemDto) => {
-        const count = await cartFacade.addToCart.execute(item);
+        const count = await cartFacade.addToCart(item);
         setCartCount(count);
         localStorage.setItem('cartCount', count.toString());
         return count;

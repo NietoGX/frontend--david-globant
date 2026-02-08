@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { bootstrap, resetBootstrap } from './index';
+import { initialize, resetInitialize } from './index';
 import { Ioc } from '../core/Ioc';
 import { IID } from './IID';
 
 describe('Bootstrap', () => {
     beforeEach(() => {
         Ioc.instance.reset();
-        resetBootstrap();
+        resetInitialize();
     });
 
     it('should register all expected dependencies', () => {
-        bootstrap();
+        initialize();
 
         expect(Ioc.instance.provideByKey(IID.productRepository)).toBeDefined();
         expect(Ioc.instance.provideByKey(IID.getProductListUseCase)).toBeDefined();

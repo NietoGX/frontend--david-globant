@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { bootstrap, resetBootstrap } from '@/modules/shared/infrastructure/bootstrap';
+import { initialize, resetInitialize } from '@/modules/shared/infrastructure/bootstrap';
 import { Ioc } from '@/modules/shared/infrastructure/core/Ioc';
+import { CartFacade } from './cart-facade';
 
 describe('Cart Facade', () => {
-    let cartFacade: any;
+    let cartFacade: CartFacade;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         Ioc.instance.reset();
-        resetBootstrap();
-        bootstrap();
-        const module = await import('./cart-facade');
-        cartFacade = module.cartFacade;
+        resetInitialize();
+        const facades = initialize();
+        cartFacade = facades.cartFacade;
     });
 
     it('should have addToCart defined', () => {

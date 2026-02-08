@@ -1,8 +1,18 @@
 import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
+import { GetProductList } from '@/modules/products/application/get-product-list.use-case';
+import { GetProductDetail } from '@/modules/products/application/get-product-detail.use-case';
 
 export class ProductsFacade {
-    get getProductList() { return inject(IID.getProductListUseCase); }
-    get getProductDetail() { return inject(IID.getProductDetailUseCase); }
-}
+    constructor(
+        private readonly getProductListUseCase = inject(IID.getProductListUseCase),
+        private readonly getProductDetailUseCase = inject(IID.getProductDetailUseCase)
+    ) { }
 
-export const productsFacade = new ProductsFacade();
+    async getProductList(search?: string) {
+        return this.getProductListUseCase.execute(search);
+    }
+
+    async getProductDetail(id: string) {
+        return this.getProductDetailUseCase.execute(id);
+    }
+}

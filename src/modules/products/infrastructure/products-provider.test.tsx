@@ -3,14 +3,21 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import React from 'react';
 import { ProductsProvider, useProducts } from './products-provider';
-import { productsFacade } from '@/modules/products/products-facade';
 
-// Mock the facade methods
-vi.mock('@/modules/products/products-facade', () => ({
-    productsFacade: {
-        getProductList: { execute: vi.fn() },
-        getProductDetail: { execute: vi.fn() },
-    },
+// Mock the initialize function to return mocked facades
+const mockGetProductList = vi.fn();
+const mockGetProductDetail = vi.fn();
+
+vi.mock('@/modules/shared/infrastructure/bootstrap', () => ({
+    initialize: vi.fn(() => ({
+        productsFacade: {
+            getProductList: mockGetProductList,
+            getProductDetail: mockGetProductDetail,
+        },
+        cartFacade: {
+            addToCart: vi.fn(),
+        },
+    })),
 }));
 
 // Test component to consume context
@@ -50,7 +57,7 @@ describe('ProductsProvider', () => {
         );
 
         await waitFor(() => {
-            expect(productsFacade.getProductList.execute).toHaveBeenCalled();
+            expect(mockGetProductList).toHaveBeenCalled();
         });
     });
 });

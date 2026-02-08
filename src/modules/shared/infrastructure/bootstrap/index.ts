@@ -1,15 +1,18 @@
 import { GetProductList } from '@/modules/products/application/get-product-list.use-case';
 import { GetProductDetail } from '@/modules/products/application/get-product-detail.use-case';
 import { ProductRepositoryApi } from '@/modules/products/infrastructure/product-repository-api';
+import { ProductsFacade } from '@/modules/products/products-facade';
 import { AddToCart } from '@/modules/cart/application/add-to-cart.use-case';
 import { CartRepositoryApi } from '@/modules/cart/infrastructure/cart-repository-api';
+import { CartFacade } from '@/modules/cart/cart-facade';
 import { Ioc } from '../core/Ioc';
 import { IID } from './IID';
 
-let isBootstrapped = false;
+let isInitialized = false;
+let facades: { productsFacade: ProductsFacade; cartFacade: CartFacade } | null = null;
 
-export function bootstrap(): Ioc {
-  if (isBootstrapped) return Ioc.instance;
+export function initialize() {
+  if (isInitialized && facades) return facades;
 
   Ioc.instance
     .singleton(IID.productRepository, () => new ProductRepositoryApi())
@@ -19,10 +22,16 @@ export function bootstrap(): Ioc {
     .singleton(IID.cartRepository, () => new CartRepositoryApi())
     .singleton(IID.addToCartUseCase, () => new AddToCart());
 
-  isBootstrapped = true;
-  return Ioc.instance;
+  facades = {
+    productsFacade: new ProductsFacade(),
+    cartFacade: new CartFacade()
+  };
+
+  isInitialized = true;
+  return facades;
 }
 
-export function resetBootstrap() {
-  isBootstrapped = false;
+export function resetInitialize() {
+  isInitialized = false;
+  facades = null;
 }

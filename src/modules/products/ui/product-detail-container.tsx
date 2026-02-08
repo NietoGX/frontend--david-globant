@@ -47,7 +47,7 @@ export function ProductDetailContainer() {
 
                 <div className="flex flex-col gap-10">
                     <div className="border-b border-border pb-8">
-                        <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-3">{product.brand}</h2>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-3">{product.brand}</p>
                         <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-6">{product.model}</h1>
                         <span className="inline-flex text-3xl font-bold text-foreground">{product.price ? `${product.price} €` : 'Price not available'}</span>
                     </div>

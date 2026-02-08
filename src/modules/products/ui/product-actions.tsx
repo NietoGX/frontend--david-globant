@@ -26,10 +26,12 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
 
             <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">Storage</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Storage options">
                     {storages.map((storage) => (
                         <button
                             key={storage.code}
+                            role="radio"
+                            aria-checked={selectedStorage === storage.code}
                             onClick={() => setSelectedStorage(storage.code)}
                             className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all
                 ${selectedStorage === storage.code
@@ -44,16 +46,19 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
 
             <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">Color</h3>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3" role="radiogroup" aria-label="Color options">
                     {colors.map((color) => (
                         <button
                             key={color.code}
+                            role="radio"
+                            aria-checked={selectedColor === color.code}
                             onClick={() => setSelectedColor(color.code)}
                             className={`w-10 h-10 rounded-full border border-input shadow-sm transition-all focus:outline-none flex items-center justify-center
                  ${selectedColor === color.code ? 'ring-2 ring-ring ring-offset-2 scale-110' : 'hover:scale-105'}
               `}
                             style={{ backgroundColor: mapColorName(color.name) }}
                             title={color.name}
+                            aria-label={color.name}
                         >
                             <span className="sr-only">{color.name}</span>
                             {selectedColor === color.code && (

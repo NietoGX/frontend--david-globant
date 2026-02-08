@@ -29,9 +29,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
 
                 <div className="text-center w-full mt-auto">
-                    <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
+                    <span className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
                         {product.brand}
-                    </h3>
+                    </span>
                     <h2 className="text-lg font-bold text-card-foreground truncate mb-3 leading-tight">
                         {product.model}
                     </h2>

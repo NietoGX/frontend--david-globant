@@ -26,14 +26,20 @@ export function Header() {
                     </Link>
 
                     {/* Breadcrumbs - Simple implementation based on route */}
-                    <nav className="hidden md:flex items-center text-sm text-muted-foreground font-medium" aria-label="Breadcrumb">
-                        <Link href="/" className="hover:text-foreground transition-colors duration-200">Home</Link>
-                        {pathname?.includes('/product/') && (
-                            <>
-                                <span className="mx-3 text-muted-foreground/50" aria-hidden="true">/</span>
-                                <span className="text-foreground" aria-current="page">Product</span>
-                            </>
-                        )}
+                    <nav aria-label="Breadcrumb">
+                        <ol className="hidden md:flex items-center text-sm text-muted-foreground font-medium">
+                            <li>
+                                <Link href="/" className="hover:text-foreground transition-colors duration-200">Home</Link>
+                            </li>
+                            {pathname?.includes('/product/') && (
+                                <>
+                                    <li aria-hidden="true" className="mx-3 text-muted-foreground/50">/</li>
+                                    <li aria-current="page">
+                                        <span className="text-foreground">Product</span>
+                                    </li>
+                                </>
+                            )}
+                        </ol>
                     </nav>
                 </div>
 

@@ -6,13 +6,19 @@ import { CartRepositoryApi } from '@/modules/cart/infrastructure/cart-repository
 import { Ioc } from '../core/Ioc';
 import { IID } from './IID';
 
-export function bootstrap(): Ioc {
-  return Ioc.instance
+let isBootstrapped = false;
 
+export function bootstrap(): Ioc {
+  if (isBootstrapped) return Ioc.instance;
+
+  Ioc.instance
     .singleton(IID.productRepository, () => new ProductRepositoryApi())
     .singleton(IID.getProductListUseCase, () => new GetProductList())
     .singleton(IID.getProductDetailUseCase, () => new GetProductDetail())
 
     .singleton(IID.cartRepository, () => new CartRepositoryApi())
     .singleton(IID.addToCartUseCase, () => new AddToCart());
+
+  isBootstrapped = true;
+  return Ioc.instance;
 }

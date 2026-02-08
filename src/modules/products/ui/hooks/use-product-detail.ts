@@ -13,6 +13,7 @@ export function useProductDetail(productId: string) {
     useEffect(() => {
         if (!productId) return;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoading(true);
         getProductDetail(productId)
             .then(setProduct)

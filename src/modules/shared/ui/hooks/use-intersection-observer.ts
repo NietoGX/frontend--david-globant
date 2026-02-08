@@ -26,6 +26,8 @@ export function useIntersectionObserver({
         setEntry(entry);
     };
 
+    const thresholdString = JSON.stringify(threshold);
+
     useEffect(() => {
         const hasIOSupport = !!window.IntersectionObserver;
 
@@ -37,7 +39,8 @@ export function useIntersectionObserver({
         observer.observe(node);
 
         return () => observer.disconnect();
-    }, [node, JSON.stringify(threshold), root, rootMargin, frozen]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [node, thresholdString, root, rootMargin, frozen]);
 
     const ref = useCallback((node: Element | null) => {
         setNode(node);

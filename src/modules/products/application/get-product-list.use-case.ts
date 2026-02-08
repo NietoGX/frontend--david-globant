@@ -1,4 +1,4 @@
-import { ProductRepository } from '../domain/product-repository';
+
 import { Product } from '../domain/product';
 import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
 

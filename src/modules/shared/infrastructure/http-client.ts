@@ -42,7 +42,7 @@ export class HttpClient {
             return data as T;
         } catch (error) {
             if (error instanceof z.ZodError) {
-                console.error('Validation Error for', path, (error as any).errors);
+                console.error('Validation Error for', path, error.issues);
                 throw new Error('Data validation failed');
             }
             throw error;

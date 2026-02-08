@@ -1,6 +1,6 @@
 import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
-import { GetProductList } from '@/modules/products/application/get-product-list.use-case';
-import { GetProductDetail } from '@/modules/products/application/get-product-detail.use-case';
+
+
 
 export class ProductsFacade {
     constructor(

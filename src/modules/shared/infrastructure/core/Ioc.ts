@@ -1,9 +1,9 @@
 type AllowedKeyTypes = string | number;
 
 export class Ioc {
-  private singletons = new Map<AllowedKeyTypes, () => any>();
-  private overrides = new Map<AllowedKeyTypes, () => any>();
-  private builtInstances = new Map<string | number, any>();
+  private singletons = new Map<AllowedKeyTypes, () => unknown>();
+  private overrides = new Map<AllowedKeyTypes, () => unknown>();
+  private builtInstances = new Map<string | number, unknown>();
   private static readonly ioc: Ioc = new Ioc();
 
   static get instance() {
@@ -18,7 +18,7 @@ export class Ioc {
     return this;
   }
 
-  override(override: Record<AllowedKeyTypes, () => any>): Ioc {
+  override(override: Record<AllowedKeyTypes, () => unknown>): Ioc {
     Object.entries(override).forEach(([key, value]) => {
       this.overrides.set(key, value);
     });
@@ -33,7 +33,7 @@ export class Ioc {
 
   provideByKey<T>(key: AllowedKeyTypes): T {
     if (this.builtInstances.has(key)) {
-      return this.builtInstances.get(key);
+      return this.builtInstances.get(key) as T;
     }
     const factory = this.overrides.has(key) ? this.overrides.get(key) : this.singletons.get(key);
     if (factory == null) {
@@ -41,6 +41,6 @@ export class Ioc {
     }
     const builtInstance = factory();
     this.builtInstances.set(key, builtInstance);
-    return builtInstance;
+    return builtInstance as T;
   }
 }

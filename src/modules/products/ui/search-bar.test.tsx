@@ -48,7 +48,7 @@ describe('SearchBar', () => {
     it('should remove search param when input is cleared', async () => {
         vi.useFakeTimers();
         // Mock initial search param
-        vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams('search=initial') as any);
+        vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams('search=initial') as unknown as ReturnType<typeof useSearchParams>);
 
         render(<SearchBar resultCount={0} />);
 

@@ -19,6 +19,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const savedCount = localStorage.getItem('cartCount');
         if (savedCount) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCartCount(parseInt(savedCount, 10));
         }
     }, []);

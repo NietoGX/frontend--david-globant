@@ -16,6 +16,7 @@ export function useProductList() {
     const searchTerm = searchParams.get('search') || undefined;
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoading(true);
         // Reset page when search changes
         setPage(1);

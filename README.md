@@ -86,3 +86,8 @@ Se ha optado por realizar las llamadas a la API desde el **lado del cliente** (`
 
 ### Gestión de Estado (Zustand)
 Aunque `zustand` está listado en las dependencias y es una excelente opción para gestión de estado global, **se decidió no utilizarlo para el carrito de compras** en esta iteración. Dado que la funcionalidad requerida para el carrito en la prueba es limitada, el uso de Context API o estado local fue suficiente y se evitó añadir complejidad innecesaria.
+
+### Comportamiento del Carrito
+El comportamiento del carrito **no es el esperado** debido a las especificaciones de la prueba técnica. Según los requisitos, el resultado del carrito debe obtenerse de la llamada a la API. Sin embargo, dado que **la API no mantiene consistencia de los datos del usuario**, el carrito siempre devuelve **1 producto**, independientemente de las acciones realizadas en la interfaz.
+
+### Carrito de la compra

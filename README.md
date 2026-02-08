@@ -89,5 +89,3 @@ Although `zustand` is listed in the dependencies and is an excellent option for 
 
 ### Cart Behavior
 The cart behavior **is not as expected** due to the technical test specifications. According to the requirements, the cart result must be obtained from the API call. However, since **the API does not maintain user data consistency**, the cart always returns **1 product**, regardless of the actions performed in the interface.
-
-### Carrito de la compra

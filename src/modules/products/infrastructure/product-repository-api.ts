@@ -3,36 +3,42 @@ import { CacheManager } from '@/modules/shared/infrastructure/cache-manager';
 import { ProductRepository } from '@/modules/products/domain/product-repository';
 import { Product, ProductDetail } from '@/modules/products/domain/product';
 import { ProductListDtoSchema, ProductDetailDtoSchema } from './product-dto';
+import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
 
 const CACHE_KEY_PRODUCTS = 'products_list';
 const CACHE_KEY_PRODUCT_DETAIL_PREFIX = 'product_detail_';
 const ONE_HOUR = 3600;
 
 export class ProductRepositoryApi implements ProductRepository {
+    constructor(
+        private readonly httpClient = inject(IID.httpClient),
+        private readonly cacheManager = inject(IID.cacheManager)
+    ) { }
+
     async getProducts(): Promise<Product[]> {
-        const cached = CacheManager.get<Product[]>(CACHE_KEY_PRODUCTS);
+        const cached = this.cacheManager.get<Product[]>(CACHE_KEY_PRODUCTS);
         if (cached) return cached;
 
 
-        const products = await HttpClient.get<Product[]>('/product', {
+        const products = await this.httpClient.get<Product[]>('/product', {
             schema: ProductListDtoSchema
         });
 
-        CacheManager.set(CACHE_KEY_PRODUCTS, products, ONE_HOUR);
+        this.cacheManager.set(CACHE_KEY_PRODUCTS, products, ONE_HOUR);
         return products;
     }
 
     async getProductDetail(id: string): Promise<ProductDetail> {
         const cacheKey = `${CACHE_KEY_PRODUCT_DETAIL_PREFIX}${id}`;
-        const cached = CacheManager.get<ProductDetail>(cacheKey);
+        const cached = this.cacheManager.get<ProductDetail>(cacheKey);
         if (cached) return cached;
 
 
-        const product = await HttpClient.get<ProductDetail>(`/product/${id}`, {
+        const product = await this.httpClient.get<ProductDetail>(`/product/${id}`, {
             schema: ProductDetailDtoSchema
         });
 
-        CacheManager.set(cacheKey, product, ONE_HOUR);
+        this.cacheManager.set(cacheKey, product, ONE_HOUR);
         return product;
     }
 }

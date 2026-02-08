@@ -4,9 +4,9 @@ interface CacheEntry<T> {
 }
 
 export class CacheManager {
-    private static readonly DEFAULT_TTL_SECONDS = 3600;
+    private readonly DEFAULT_TTL_SECONDS = 3600;
 
-    static set<T>(key: string, value: T, ttl: number = CacheManager.DEFAULT_TTL_SECONDS): void {
+    set<T>(key: string, value: T, ttl: number = this.DEFAULT_TTL_SECONDS): void {
         if (typeof window === 'undefined') return;
 
         const entry: CacheEntry<T> = {
@@ -20,7 +20,7 @@ export class CacheManager {
         }
     }
 
-    static get<T>(key: string): T | null {
+    get<T>(key: string): T | null {
         if (typeof window === 'undefined') return null;
 
         try {
@@ -40,7 +40,7 @@ export class CacheManager {
         }
     }
 
-    static remove(key: string): void {
+    remove(key: string): void {
         if (typeof window === 'undefined') return;
         localStorage.removeItem(key);
     }

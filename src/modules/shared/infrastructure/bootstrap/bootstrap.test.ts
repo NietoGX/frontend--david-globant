@@ -18,5 +18,8 @@ describe('Bootstrap', () => {
 
         expect(Ioc.instance.provideByKey(IID.cartRepository)).toBeDefined();
         expect(Ioc.instance.provideByKey(IID.addToCartUseCase)).toBeDefined();
+
+        expect(Ioc.instance.provideByKey(IID.httpClient)).toBeDefined();
+        expect(Ioc.instance.provideByKey(IID.cacheManager)).toBeDefined();
     });
 });

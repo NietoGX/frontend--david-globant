@@ -5,6 +5,9 @@ import { AddToCart } from '@/modules/cart/application/add-to-cart.use-case';
 import { CartRepository } from '@/modules/cart/domain/cart-repository';
 import { Ioc } from '../core/Ioc';
 
+import { HttpClient } from '@/modules/shared/infrastructure/http-client';
+import { CacheManager } from '@/modules/shared/infrastructure/cache-manager';
+
 export const IID = {
 
   productRepository: 'productRepository',
@@ -14,6 +17,8 @@ export const IID = {
 
   cartRepository: 'cartRepository',
   addToCartUseCase: 'addToCartUseCase',
+  httpClient: 'httpClient',
+  cacheManager: 'cacheManager',
 } as const;
 
 export interface DependencyMap {
@@ -22,6 +27,8 @@ export interface DependencyMap {
   [IID.getProductDetailUseCase]: GetProductDetail;
   [IID.cartRepository]: CartRepository;
   [IID.addToCartUseCase]: AddToCart;
+  [IID.httpClient]: HttpClient;
+  [IID.cacheManager]: CacheManager;
 }
 
 export function inject<K extends keyof DependencyMap>(key: K): DependencyMap[K] {

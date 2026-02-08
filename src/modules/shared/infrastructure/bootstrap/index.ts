@@ -7,6 +7,8 @@ import { CartRepositoryApi } from '@/modules/cart/infrastructure/cart-repository
 import { CartFacade } from '@/modules/cart/cart-facade';
 import { Ioc } from '../core/Ioc';
 import { IID } from './IID';
+import { HttpClient } from '@/modules/shared/infrastructure/http-client';
+import { CacheManager } from '@/modules/shared/infrastructure/cache-manager';
 
 let isInitialized = false;
 let facades: { productsFacade: ProductsFacade; cartFacade: CartFacade } | null = null;
@@ -15,6 +17,8 @@ export function initialize() {
   if (isInitialized && facades) return facades;
 
   Ioc.instance
+    .singleton(IID.httpClient, () => new HttpClient())
+    .singleton(IID.cacheManager, () => new CacheManager())
     .singleton(IID.productRepository, () => new ProductRepositoryApi())
     .singleton(IID.getProductListUseCase, () => new GetProductList())
     .singleton(IID.getProductDetailUseCase, () => new GetProductDetail())

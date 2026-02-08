@@ -1,15 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-// import { useCartStore } from '@/modules/cart/ui/cart-store'; // Removed as we are not migrating cart UI yet
 import { ShoppingBag } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useCart } from '@/modules/cart/infrastructure/cart-provider';
 import { useState, useEffect } from 'react';
 
-// Simplified Header without CartStore for now (only visualization requested)
 export function Header() {
-    // const count = useCartStore((state) => state.count);
-    const count = 0; // Mock count
+    const { cartCount } = useCart();
+    const count = cartCount;
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
 

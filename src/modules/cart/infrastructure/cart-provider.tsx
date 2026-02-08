@@ -6,6 +6,7 @@ import { bootstrap } from '@/modules/shared/infrastructure/bootstrap';
 import { CartItemDto } from '@/modules/cart/infrastructure/cart-dto';
 
 interface CartContextType {
+    cartCount: number;
     addToCart: (item: CartItemDto) => Promise<number>;
 }
 
@@ -14,13 +15,25 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 export function CartProvider({ children }: { children: ReactNode }) {
     const [isInitialized, setIsInitialized] = useState(false);
 
+    const [cartCount, setCartCount] = useState(0);
+
     useEffect(() => {
         bootstrap();
+        const savedCount = localStorage.getItem('cartCount');
+        if (savedCount) {
+            setCartCount(parseInt(savedCount, 10));
+        }
         setIsInitialized(true);
     }, []);
 
     const value = {
-        addToCart: async (item: CartItemDto) => cartFacade.addToCart.execute(item),
+        cartCount,
+        addToCart: async (item: CartItemDto) => {
+            const count = await cartFacade.addToCart.execute(item);
+            setCartCount(count);
+            localStorage.setItem('cartCount', count.toString());
+            return count;
+        },
     };
 
     if (!isInitialized) return null;

@@ -3,12 +3,19 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import React from 'react';
 import { CartProvider, useCart } from './cart-provider';
-import { cartFacade } from '@/modules/cart/cart-facade';
 
-vi.mock('@/modules/cart/cart-facade', () => ({
-    cartFacade: {
-        addToCart: { execute: vi.fn() },
-    },
+const mockAddToCart = vi.fn();
+
+vi.mock('@/modules/shared/infrastructure/bootstrap', () => ({
+    initialize: vi.fn(() => ({
+        productsFacade: {
+            getProductList: vi.fn(),
+            getProductDetail: vi.fn(),
+        },
+        cartFacade: {
+            addToCart: mockAddToCart,
+        },
+    })),
 }));
 
 const localStorageMock = (function () {
@@ -89,8 +96,7 @@ describe('CartProvider', () => {
     });
 
     it('should update count and localStorage on addToCart', async () => {
-        const mockExecute = vi.fn().mockResolvedValue(3);
-        cartFacade.addToCart.execute = mockExecute;
+        mockAddToCart.mockResolvedValue(3);
 
         render(
             <CartProvider>
@@ -108,7 +114,7 @@ describe('CartProvider', () => {
         });
 
         await waitFor(() => {
-            expect(mockExecute).toHaveBeenCalled();
+            expect(mockAddToCart).toHaveBeenCalled();
             expect(screen.getByTestId('count')).toHaveTextContent('3');
             expect(localStorage.getItem('cartCount')).toBe('3');
         });

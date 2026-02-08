@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { CartProvider, useCart } from './cart-provider';
 
-const mockAddToCart = vi.fn();
+const { mockAddToCartFn } = vi.hoisted(() => ({
+    mockAddToCartFn: vi.fn(),
+}));
 
 vi.mock('@/modules/shared/infrastructure/bootstrap', () => ({
     initialize: vi.fn(() => ({
@@ -13,7 +15,7 @@ vi.mock('@/modules/shared/infrastructure/bootstrap', () => ({
             getProductDetail: vi.fn(),
         },
         cartFacade: {
-            addToCart: mockAddToCart,
+            addToCart: mockAddToCartFn,
         },
     })),
 }));
@@ -96,7 +98,7 @@ describe('CartProvider', () => {
     });
 
     it('should update count and localStorage on addToCart', async () => {
-        mockAddToCart.mockResolvedValue(3);
+        mockAddToCartFn.mockResolvedValue(3);
 
         render(
             <CartProvider>
@@ -114,7 +116,7 @@ describe('CartProvider', () => {
         });
 
         await waitFor(() => {
-            expect(mockAddToCart).toHaveBeenCalled();
+            expect(mockAddToCartFn).toHaveBeenCalled();
             expect(screen.getByTestId('count')).toHaveTextContent('3');
             expect(localStorage.getItem('cartCount')).toBe('3');
         });

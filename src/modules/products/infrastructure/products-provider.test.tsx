@@ -4,15 +4,16 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { ProductsProvider, useProducts } from './products-provider';
 
-// Mock the initialize function to return mocked facades
-const mockGetProductList = vi.fn();
-const mockGetProductDetail = vi.fn();
+const { mockGetProductListFn, mockGetProductDetailFn } = vi.hoisted(() => ({
+    mockGetProductListFn: vi.fn(),
+    mockGetProductDetailFn: vi.fn(),
+}));
 
 vi.mock('@/modules/shared/infrastructure/bootstrap', () => ({
     initialize: vi.fn(() => ({
         productsFacade: {
-            getProductList: mockGetProductList,
-            getProductDetail: mockGetProductDetail,
+            getProductList: mockGetProductListFn,
+            getProductDetail: mockGetProductDetailFn,
         },
         cartFacade: {
             addToCart: vi.fn(),
@@ -57,7 +58,7 @@ describe('ProductsProvider', () => {
         );
 
         await waitFor(() => {
-            expect(mockGetProductList).toHaveBeenCalled();
+            expect(mockGetProductListFn).toHaveBeenCalled();
         });
     });
 });

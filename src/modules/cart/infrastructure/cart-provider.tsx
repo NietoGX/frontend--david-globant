@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, useContext, ReactNode, useEffect, useState, useCallback, useMemo } from 'react';
 import { cartFacade } from '@/modules/cart/cart-facade';
 import { bootstrap } from '@/modules/shared/infrastructure/bootstrap';
 import { CartItemDto } from '@/modules/cart/infrastructure/cart-dto';
@@ -26,17 +26,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setIsInitialized(true);
     }, []);
 
-    const value = {
-        cartCount,
-        addToCart: async (item: CartItemDto) => {
-            const count = await cartFacade.addToCart.execute(item);
-            setCartCount(count);
-            localStorage.setItem('cartCount', count.toString());
-            return count;
-        },
-    };
+    const addToCart = useCallback(async (item: CartItemDto) => {
+        const count = await cartFacade.addToCart.execute(item);
+        setCartCount(count);
+        localStorage.setItem('cartCount', count.toString());
+        return count;
+    }, []);
 
-    if (!isInitialized) return null;
+    const value = useMemo(() => ({
+        cartCount,
+        addToCart,
+    }), [cartCount, addToCart]);
 
     return (
         <CartContext.Provider value={value}>

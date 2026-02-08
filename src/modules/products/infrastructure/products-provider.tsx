@@ -25,8 +25,6 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
         getProductDetail: async (id: string) => productsFacade.getProductDetail.execute(id),
     }), []);
 
-    if (!isInitialized) return null;
-
     return (
         <ProductsContext.Provider value={value}>
             {children}

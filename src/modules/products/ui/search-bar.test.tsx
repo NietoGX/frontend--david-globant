@@ -2,7 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { SearchBar } from './search-bar';
-import React from 'react';
+
+import { useSearchParams } from 'next/navigation';
 
 // Mock router hooks
 const mockReplace = vi.fn();
@@ -10,9 +11,7 @@ vi.mock('next/navigation', () => ({
     useRouter: () => ({
         replace: mockReplace,
     }),
-    useSearchParams: () => ({
-        get: vi.fn(() => ''),
-    }),
+    useSearchParams: vi.fn(() => new URLSearchParams()),
     usePathname: () => '/',
 }));
 
@@ -28,13 +27,38 @@ describe('SearchBar', () => {
         expect(input).toBeInTheDocument();
     });
 
-    // Test that it does NOT trigger functionality (or at least triggers it but we mock it)
-    // Actually the user said "que no tenga funcionalidad aún".
-    // In my implementation I kept the logic but it might be debated if I should remove it.
-    // The implementation DOES have logic (useEffect with setTimeout), so I should test it IF it is there,
-    // OR remove it to strictly follow "no functionality".
-    // The prompt: "el buscador que no tenga funcionalidad aún" -> "the searcher that doesn't have functionality yet".
-    // This likely means the input works (you can type) but it might not filter OR it might filters but user meant "don't implement complex search logic yet".
-    // given I copied the file and it has logic, I will leave it as is but won't test the complex interaction to avoid flakiness if logic is not fully hooked up to backend or context in this view.
-    // I will just test rendering for now as per "visualization".
+    it('should update URL with search term after debounce', async () => {
+        vi.useFakeTimers();
+        render(<SearchBar resultCount={0} />);
+
+        const input = screen.getByPlaceholderText('Search for a brand or model...');
+        fireEvent.change(input, { target: { value: 'test' } });
+
+        // Should not have called yet
+        expect(mockReplace).not.toHaveBeenCalled();
+
+        // Fast-forward time
+        vi.advanceTimersByTime(300);
+
+        expect(mockReplace).toHaveBeenCalledWith('/?search=test');
+
+        vi.useRealTimers();
+    });
+
+    it('should remove search param when input is cleared', async () => {
+        vi.useFakeTimers();
+        // Mock initial search param
+        vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams('search=initial') as any);
+
+        render(<SearchBar resultCount={0} />);
+
+        const input = screen.getByPlaceholderText('Search for a brand or model...');
+        fireEvent.change(input, { target: { value: '' } });
+
+        vi.advanceTimersByTime(300);
+
+        expect(mockReplace).toHaveBeenCalledWith('/?');
+
+        vi.useRealTimers();
+    });
 });

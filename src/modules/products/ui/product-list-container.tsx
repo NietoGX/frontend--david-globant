@@ -7,10 +7,6 @@ import { useProductList } from './hooks/use-product-list';
 export function ProductListContainer() {
     const { products, isLoading } = useProductList();
 
-    if (isLoading) {
-        return <div className="container mx-auto px-4 py-8 flex justify-center">Loading...</div>;
-    }
-
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -22,7 +18,11 @@ export function ProductListContainer() {
                 />
             </div>
 
-            <ProductGrid products={products} />
+            {isLoading ? (
+                <div className="flex justify-center py-20">Loading...</div>
+            ) : (
+                <ProductGrid products={products} />
+            )}
         </div>
     );
 }

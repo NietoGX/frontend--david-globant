@@ -1,13 +1,35 @@
 'use client';
 
-// SearchBar with NO functionality as requested.
-// Just the UI.
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 interface SearchBarProps {
     resultCount: number;
 }
 
 export function SearchBar({ resultCount }: SearchBarProps) {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const [term, setTerm] = useState(searchParams.get('search') || '');
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            const currentSearch = searchParams.get('search') || '';
+            if (currentSearch === term) return;
+
+            const params = new URLSearchParams(searchParams);
+            if (term) {
+                params.set('search', term);
+            } else {
+                params.delete('search');
+            }
+            router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [term, router, pathname, searchParams]); // Dependencies
+
     return (
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
             <div className="relative w-full max-w-2xl group">
@@ -16,9 +38,8 @@ export function SearchBar({ resultCount }: SearchBarProps) {
                     placeholder="Search for a brand or model..."
                     aria-label="Search products"
                     className="w-full pl-12 pr-4 py-4 rounded-2xl border-0 bg-background shadow-sm ring-1 ring-input focus:ring-2 focus:ring-ring transition-all outline-none text-lg placeholder:text-muted-foreground/50 group-hover:shadow-md"
-                    disabled // Disabled to ensure "no functionality" is strictly enforced visually too, or just non-interactive? 
-                // User said "launcher que no tenga funcionalidad aún" (searcher that doesn't have functionality yet).
-                // I'll keep it enabled but without onChange logic.
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
                 />
                 <svg
                     className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-foreground transition-colors"

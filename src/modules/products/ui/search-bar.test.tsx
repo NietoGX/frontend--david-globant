@@ -40,7 +40,7 @@ describe('SearchBar', () => {
         // Fast-forward time
         vi.advanceTimersByTime(300);
 
-        expect(mockReplace).toHaveBeenCalledWith('/?search=test');
+        expect(mockReplace).toHaveBeenCalledWith('/?search=test', { scroll: false });
 
         vi.useRealTimers();
     });
@@ -57,7 +57,7 @@ describe('SearchBar', () => {
 
         vi.advanceTimersByTime(300);
 
-        expect(mockReplace).toHaveBeenCalledWith('/?');
+        expect(mockReplace).toHaveBeenCalledWith('/?', { scroll: false });
 
         vi.useRealTimers();
     });

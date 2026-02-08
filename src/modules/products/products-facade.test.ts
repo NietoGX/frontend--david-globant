@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { bootstrap } from '@/modules/shared/infrastructure/bootstrap';
+import { bootstrap, resetBootstrap } from '@/modules/shared/infrastructure/bootstrap';
 import { Ioc } from '@/modules/shared/infrastructure/core/Ioc';
 
 describe('Products Facade', () => {
@@ -7,6 +7,7 @@ describe('Products Facade', () => {
 
     beforeEach(async () => {
         Ioc.instance.reset();
+        resetBootstrap();
         bootstrap();
         // Re-import to ensure fresh execution if possible, or just import once.
         // Since it exports a const singleton, dynamic import will return the SAME module instance.

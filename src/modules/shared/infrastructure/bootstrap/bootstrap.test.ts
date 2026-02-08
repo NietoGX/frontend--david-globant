@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { bootstrap } from './index';
+import { bootstrap, resetBootstrap } from './index';
 import { Ioc } from '../core/Ioc';
 import { IID } from './IID';
 
 describe('Bootstrap', () => {
     beforeEach(() => {
         Ioc.instance.reset();
+        resetBootstrap();
     });
 
     it('should register all expected dependencies', () => {

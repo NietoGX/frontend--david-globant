@@ -5,8 +5,8 @@ import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
  * Exposes all use cases for the products module
  */
 export class ProductsFacade {
-    readonly getProductList = inject(IID.getProductListUseCase);
-    readonly getProductDetail = inject(IID.getProductDetailUseCase);
+    get getProductList() { return inject(IID.getProductListUseCase); }
+    get getProductDetail() { return inject(IID.getProductDetailUseCase); }
 }
 
 // Export singleton instance

@@ -22,3 +22,7 @@ export function bootstrap(): Ioc {
   isBootstrapped = true;
   return Ioc.instance;
 }
+
+export function resetBootstrap() {
+  isBootstrapped = false;
+}

@@ -2,7 +2,7 @@ import { inject, IID } from '@/modules/shared/infrastructure/bootstrap/IID';
 
 
 export class CartFacade {
-    readonly addToCart = inject(IID.addToCartUseCase);
+    get addToCart() { return inject(IID.addToCartUseCase); }
 }
 
 

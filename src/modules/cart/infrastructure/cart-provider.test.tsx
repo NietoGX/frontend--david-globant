@@ -5,7 +5,6 @@ import React from 'react';
 import { CartProvider, useCart } from './cart-provider';
 import { cartFacade } from '@/modules/cart/cart-facade';
 
-// Mock the facade methods
 vi.mock('@/modules/cart/cart-facade', () => ({
     cartFacade: {
         addToCart: { execute: vi.fn() },
@@ -34,7 +33,6 @@ Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
 });
 
-// Test component to consume context
 const TestComponent = ({ onAddToCart }: { onAddToCart?: () => void }) => {
     const { addToCart, cartCount } = useCart();
 
@@ -92,7 +90,6 @@ describe('CartProvider', () => {
 
     it('should update count and localStorage on addToCart', async () => {
         const mockExecute = vi.fn().mockResolvedValue(3);
-        // @ts-ignore
         cartFacade.addToCart.execute = mockExecute;
 
         render(

@@ -3,9 +3,6 @@ import { Ioc } from './Ioc';
 
 describe('Ioc Container', () => {
     beforeEach(() => {
-        // Reset the singleton instance before each test
-        // We need to access the private/protected singleton to reset it or expose a reset method
-        // The current Ioc implementation has a reset() method.
         Ioc.instance.reset();
     });
 

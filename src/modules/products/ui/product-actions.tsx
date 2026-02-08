@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ProductColor, ProductStorage } from '@/modules/products/domain/product';
-import { ShoppingCart } from 'lucide-react'; // Changed from LucideShoppingCart based on typical lucide import
+import { ShoppingCart } from 'lucide-react';
 
 interface ProductActionsProps {
     colors: ProductColor[];
@@ -11,7 +11,6 @@ interface ProductActionsProps {
 }
 
 export function ProductActions({ colors, storages, onAddToCart }: ProductActionsProps) {
-    // Select first option by default
     const [selectedColor, setSelectedColor] = useState<number | undefined>(colors[0]?.code);
     const [selectedStorage, setSelectedStorage] = useState<number | undefined>(storages[0]?.code);
 
@@ -25,7 +24,6 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
         <div className="bg-card rounded-xl shadow-sm border border-border p-6 space-y-6">
             <h2 className="text-xl font-bold text-foreground mb-4">Select Options</h2>
 
-            {/* Storage Selection */}
             <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">Storage</h3>
                 <div className="flex flex-wrap gap-2">
@@ -44,7 +42,6 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
                 </div>
             </div>
 
-            {/* Color Selection */}
             <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">Color</h3>
                 <div className="flex flex-wrap gap-3">
@@ -58,7 +55,6 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
                             style={{ backgroundColor: mapColorName(color.name) }}
                             title={color.name}
                         >
-                            {/* Fallback label if color mapping fails or for contrast */}
                             <span className="sr-only">{color.name}</span>
                             {selectedColor === color.code && (
                                 <div className="w-2 h-2 bg-background rounded-full shadow-inner ring-1 ring-black/10" />
@@ -82,7 +78,6 @@ export function ProductActions({ colors, storages, onAddToCart }: ProductActions
     );
 }
 
-// Simple helper to map API color names to CSS colors roughly.
 function mapColorName(name: string): string {
     const n = name.toLowerCase();
     if (n.includes('gold')) return '#FFD700';
@@ -90,7 +85,7 @@ function mapColorName(name: string): string {
     if (n.includes('silver')) return '#C0C0C0';
     if (n.includes('midnight')) return '#191970';
     if (n.includes('rose')) return '#FF007F';
-    if (n.includes('green')) return '#008000'; // Basic green
+    if (n.includes('green')) return '#008000';
     if (n.includes('black')) return '#000000';
     if (n.includes('white')) return '#FFFFFF';
 

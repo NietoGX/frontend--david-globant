@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, useContext, ReactNode, useEffect, useState, useMemo } from 'react';
 import { productsFacade } from '@/modules/products/products-facade';
 import { bootstrap } from '@/modules/shared/infrastructure/bootstrap';
 import { Product, ProductDetail } from '@/modules/products/domain/product';
@@ -20,10 +20,10 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
         setIsInitialized(true);
     }, []);
 
-    const value = {
+    const value = useMemo(() => ({
         getProductList: async (search?: string) => productsFacade.getProductList.execute(search),
         getProductDetail: async (id: string) => productsFacade.getProductDetail.execute(id),
-    };
+    }), []);
 
     if (!isInitialized) return null;
 
